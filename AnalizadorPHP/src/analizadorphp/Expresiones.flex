@@ -1,5 +1,5 @@
 package analizadorphp;
-import static.analizadorphp.Token.*;
+import static analizadorphp.Token.*;
 %%
 %class Lexer
 %type Token
@@ -49,7 +49,7 @@ public String lexeme;
 ("__"({c}{l}{a}{s}{s}|{n}{a}{m}{e}{s}{p}{a}{c}{e}|{d}{i}{r}|{t}{r}{a}{i}{t}|{f}{i}{l}{e}|{f}{u}{n}{c}{t}{i}{o}{n}|{l}{i}{n}{e}|{m}{e}{t}{h}{o}{d})"__") {lexeme = yytext(); return CTC;}
 {i}{n}{t}({e}{g}{e}{r})?|{t}{r}{u}{e}|{i}{t}{e}{r}{a}{b}{l}{e}|{f}{l}{o}{a}{t}|{f}{a}{l}{s}{e}|{o}{b}{j}{e}{c}{t}|{b}{o}{o}{l}|{n}{u}{l}{l}|{r}{e}{s}{o}{u}{r}{c}{e}{d}
 |{s}{t}{r}{i}{n}{g}|{v}{o}{i}{d}|{m}{i}{x}{e}{d}|{n}{u}{m}{e}{r}{i}{c} {lexeme = yytext(); return RESERVEDWORD;}
-"$"GLOBALS|_(SERVER|GET|POST|FILES|COOKIE|SESSION|REQUEST|ENV)|({L}({L}|{D})*) {lexeme = yytext(); return ID;}
+("$")?GLOBALS|_(SERVER|GET|POST|FILES|COOKIE|SESSION|REQUEST|ENV)|({L}({L}|{D})*) {lexeme = yytext(); return ID;}
 ("+"|"-")?({D})+ {lexeme = yytext(); return INT;}
 ("+"|"-")?({D})+"."({D})+ {lexeme = yytext(); return FLOAT;}
 [+-]?0[xX][0-9a-fA-F]+|[+-]?0[0-7]+|[+-]?0[bB][01]+ {lexeme = yytext(); return NUM;}

@@ -9,9 +9,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Reader;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -95,7 +99,7 @@ public class vista extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JFileChooser seleccionar = new JFileChooser();
-        FileNameExtensionFilter filtro = new FileNameExtensionFilter("ASM", "asm");
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("PHP", "php");
         seleccionar.setFileFilter(filtro);
         int r = seleccionar.showOpenDialog(null);
         if(r==JFileChooser.APPROVE_OPTION){
@@ -107,8 +111,61 @@ public class vista extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try { 
             Reader reader = new BufferedReader(new FileReader(Path));
-       
+            Lexer lexer = new Lexer(reader);
+            String [] NuevoPath = Path.split(Pattern.quote("."));
+            String nuevo = NuevoPath[0];
+            File nuevoarchivo = new File (nuevo + ".out");
+            nuevoarchivo.createNewFile();
+            PrintWriter escribir = new PrintWriter(nuevo + ".out");
+            String result = "";
+            while (true){
+                Token token = lexer.yylex();
+                if (token == null){
+                    if (!result.equals("")){
+                        escribir.close();
+                        nuevoarchivo.delete();
+                        File error = new File (nuevo + ".txt");
+                        error.createNewFile();
+                        PrintWriter escError = new PrintWriter(nuevo + ".txt");
+                        escError.println(result);
+                        escError.close();
+                    }
+                    
+                    result = result + "se terminó de analizar";
+                    jTextArea1.setText(result);
+                    return;
+                }
+                switch(token){
+                    case ERROR:
+                        result = result + "Error, la cadena: " + lexer.lexeme + " no pertence al lenguaje \n";
+                        break;
+                    case COMENT:
+                        break;
+                    case RESERVEDWORD:
+                        String convertir = lexer.lexeme.toLowerCase();
+                        escribir.print(convertir);
+                        break;
+                    case EDC:
+                        String conv = lexer.lexeme.toLowerCase();
+                        escribir.print(conv);
+                        break;
+                    case CTC:
+                        String convert = lexer.lexeme.toUpperCase();
+                        escribir.print(convert);
+                        break;
+                    case BD:
+                        String conve = "$recordset[";
+                        conve = conve + lexer.lexeme.substring(12, lexer.lexeme.length()-1).toUpperCase();
+                        conve = conve + "]";
+                        escribir.print(conve);
+                    default:
+                        escribir.print(lexer.lexeme);
+                        break;
+                }
+            }
         } catch (FileNotFoundException ex) {
+            Logger.getLogger(vista.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(vista.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
