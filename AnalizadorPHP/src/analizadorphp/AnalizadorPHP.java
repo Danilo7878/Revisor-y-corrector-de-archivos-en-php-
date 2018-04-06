@@ -5,6 +5,8 @@
  */
 package analizadorphp;
 
+import java.io.File;
+
 /**
  *
  * @author danil
@@ -15,7 +17,11 @@ public class AnalizadorPHP {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+        String path = "C:/Users/danil/Desktop/Proyecto de LFA/AnalizadorPHP/src/analizadorphp/Expresiones.flex";
+        generarLexer(path);
     }
-    
+    public static void generarLexer(String path){
+        File file = new File(path);
+        jflex.Main.generate(file);
+    }
 }
