@@ -110,6 +110,7 @@ public class vista extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try { 
+            if (!Path.equals("")){
             Reader reader = new BufferedReader(new FileReader(Path));
             Lexer lexer = new Lexer(reader);
             String [] NuevoPath = Path.split(Pattern.quote("."));
@@ -166,6 +167,10 @@ public class vista extends javax.swing.JFrame {
                         escribir.print(lexer.lexeme);
                         break;
                 }
+            }
+            }
+            else{
+
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(vista.class.getName()).log(Level.SEVERE, null, ex);
