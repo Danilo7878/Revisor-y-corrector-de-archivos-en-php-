@@ -115,8 +115,11 @@ public class vista extends javax.swing.JFrame {
             String [] NuevoPath = Path.split(Pattern.quote("."));
             String nuevo = NuevoPath[0];
             File nuevoarchivo = new File (nuevo + ".out");
+            File error = new File (nuevo + ".txt");
             nuevoarchivo.createNewFile();
+            error.createNewFile();
             PrintWriter escribir = new PrintWriter(nuevo + ".out");
+            PrintWriter escError = new PrintWriter(nuevo + ".txt");
             String result = "";
             while (true){
                 Token token = lexer.yylex();
@@ -124,13 +127,13 @@ public class vista extends javax.swing.JFrame {
                     if (!result.equals("")){
                         escribir.close();
                         nuevoarchivo.delete();
-                        File error = new File (nuevo + ".txt");
-                        error.createNewFile();
-                        PrintWriter escError = new PrintWriter(nuevo + ".txt");
-                        escError.println(result);
                         escError.close();
                     }
-                    
+                    else{
+                        escribir.close();
+                        escError.close();
+                        error.delete();
+                    }
                     result = result + "se terminó de analizar";
                     jTextArea1.setText(result);
                     return;
@@ -138,6 +141,7 @@ public class vista extends javax.swing.JFrame {
                 switch(token){
                     case ERROR:
                         result = result + "Error, la cadena: " + lexer.lexeme + " no pertence al lenguaje \n";
+                        escError.println(result);
                         break;
                     case COMENT:
                         break;

@@ -19,6 +19,8 @@ public class AnalizadorPHP {
     public static void main(String[] args) {
         String path = "C:/Users/danil/Desktop/Proyecto de LFA/AnalizadorPHP/src/analizadorphp/Expresiones.flex";
         generarLexer(path);
+        vista abrir = new vista();
+        abrir.setVisible(true);
     }
     public static void generarLexer(String path){
         File file = new File(path);
